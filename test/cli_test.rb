@@ -41,7 +41,7 @@ class Twurl::CLI::OptionParsingTest < Minitest::Test
   module RequestMethodParsingTests
     def test_request_method_is_default_if_unspecified
       options = Twurl::CLI.parse_options([TEST_PATH])
-      assert_equal Twurl::Options::DEFAULT_REQUEST_METHOD, options.request_method
+      assert_equal Twurl::CLI::DEFAULT_REQUEST_METHOD, options.request_method
     end
 
     def test_specifying_a_request_method_extracts_and_normalizes_request_method
@@ -184,30 +184,15 @@ class Twurl::CLI::OptionParsingTest < Minitest::Test
   end
   include HeaderParsingTests
 
-  module SSLDisablingTests
-    def test_ssl_is_on_by_default
-      options = Twurl::CLI.parse_options([TEST_PATH])
-      assert options.ssl?
-    end
-
-    def test_passing_no_ssl_option_disables_ssl
-      ['-U', '--no-ssl'].each do |switch|
-        options = Twurl::CLI.parse_options([TEST_PATH, switch])
-        assert !options.ssl?
-      end
-    end
-  end
-  include SSLDisablingTests
-
   module HostOptionTests
     def test_not_specifying_host_sets_it_to_the_default
       options = Twurl::CLI.parse_options([TEST_PATH])
-      assert_equal Twurl::Options::DEFAULT_HOST, options.host
+      assert_equal Twurl::CLI::DEFAULT_HOST, options.host
     end
 
     def test_setting_host_updates_to_requested_value
       custom_host = 'localhost:3000'
-      assert Twurl::Options::DEFAULT_HOST != custom_host
+      assert Twurl::CLI::DEFAULT_HOST != custom_host
 
       [[TEST_PATH, '-H', custom_host], [TEST_PATH, '--host', custom_host]].each do |option_combination|
         options = Twurl::CLI.parse_options(option_combination)
